@@ -11,7 +11,7 @@ Team **Teqprotech** (Team ID E10) · **ATOX AI for Climate · Youth Climate Hack
 
 ## The climate problem
 
-Extreme heat is one of the deadliest climate hazards, and Karachi's humid coastal climate makes the heat people *feel* several degrees higher than the air temperature. In the reanalysis grid cell used by this app, daily maximum apparent temperature reached **43.7 °C on 16 June 2025** (air 38.0 °C, 74% humidity), and the number of days at or above 39 °C apparent temperature was **41 in 2024 and 39 in 2025**, compared with 4–16 per year in 2016–2023 (Open-Meteo / ERA5, see `src/data`).
+Extreme heat is one of the deadliest climate hazards, and Karachi's humid coastal climate makes the heat people *feel* several degrees higher than the air temperature. In the reanalysis grid cell used by this app, Open-Meteo apparent temperature (a Steadman-type "feels-like" measure combining air temperature, humidity and wind — not the NWS heat index) reached **43.7 °C at 12:00 PKT on 16 June 2025** (air temperature 38.0 °C, relative humidity 42% at that hour; daily mean humidity 74%), and the number of days at or above 39 °C apparent temperature was **41 in 2024 and 39 in 2025**, compared with 4–16 per year in 2016–2023 (Open-Meteo / ERA5, see `src/data`).
 
 Municipal resilience teams, NGOs and community planners have to decide where to put limited resources — water points, shade, cooling spaces, heat information — but climate data is rarely presented in a form that supports those decisions.
 

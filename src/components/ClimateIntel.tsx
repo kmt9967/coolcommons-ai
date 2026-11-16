@@ -79,7 +79,7 @@ export default function ClimateIntel({ selectedDay, onSelectDay }: { selectedDay
             </select>
           </div>
           <p className="text-xs text-muted mb-2">
-            {fmtDate(sel.date)}: air max {sel.tmax} °C, apparent max {sel.atmax} °C (<span style={{ color: heatBand(sel.atmax).color }}>{heatBand(sel.atmax).label}</span>), humidity {sel.rh}%, overnight apparent min {sel.atmin} °C.
+            {fmtDate(sel.date)}: air max {sel.tmax} °C, apparent max {sel.atmax} °C (<span style={{ color: heatBand(sel.atmax).color }}>{heatBand(sel.atmax).label}</span>), daily mean humidity {sel.rh}%, overnight apparent min {sel.atmin} °C.
           </p>
           <div className="h-60">
             <ResponsiveContainer>
