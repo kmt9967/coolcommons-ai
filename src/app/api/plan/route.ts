@@ -24,12 +24,14 @@ function rateLimited(ip: string): boolean {
 async function callGemini(system: string, user: string): Promise<{ text: string; model: string }> {
   const key = process.env.GEMINI_API_KEY;
   if (!key) throw new Error("no-key");
-  const models = [process.env.GEMINI_MODEL || "gemini-2.5-flash", "gemini-flash-latest", "gemini-2.5-flash-lite"];
+  const models = [...new Set([process.env.GEMINI_MODEL || "gemini-2.5-flash", "gemini-2.5-flash-lite", "gemini-flash-latest", "gemini-flash-lite-latest"])];
   let lastErr = "provider-error";
-  const attempts = models.flatMap((m) => [{ model: m, thinkingOff: true }, { model: m, thinkingOff: false }]);
+  const started = Date.now();
+  const attempts = models.flatMap((m) => [{ model: m, thinkingOff: true }]).concat(models.map((m) => ({ model: m, thinkingOff: false })));
   for (const { model, thinkingOff } of attempts) {
+    if (Date.now() - started > 45_000) break;
     const ctrl = new AbortController();
-    const timer = setTimeout(() => ctrl.abort(), 45_000);
+    const timer = setTimeout(() => ctrl.abort(), 20_000);
     try {
       const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent`, {
         method: "POST",
@@ -41,17 +43,20 @@ async function callGemini(system: string, user: string): Promise<{ text: string;
         }),
         signal: ctrl.signal,
       });
-      if (res.status === 429) throw new Error("quota");
+      if (res.status === 429) { lastErr = "quota"; continue; }
       if (!res.ok) {
         const detail = (await res.text()).slice(0, 300).replace(/AIza[0-9A-Za-z_-]+/g, "[redacted]");
         console.error(`gemini ${model} thinkingOff=${thinkingOff} status=${res.status}: ${detail}`);
         lastErr = `${model}:${res.status}`;
-        if (res.status === 404 || res.status === 400) continue;
+        if (res.status === 404 || res.status === 400 || res.status >= 500) continue;
         throw new Error(`provider-${res.status}`);
       }
       const json = await res.json();
       const text = (json?.candidates?.[0]?.content?.parts ?? []).map((p: { text?: string }) => p.text ?? "").join("");
       return { text, model };
+    } catch (e) {
+      if (e instanceof Error && e.message.startsWith("provider-")) throw e;
+      lastErr = `${model}:timeout`;
     } finally {
       clearTimeout(timer);
     }
@@ -99,7 +104,7 @@ export async function POST(req: NextRequest) {
     if (reason === "quota") plan.notice += " The free-tier AI quota is currently exhausted, so the rules-based engine was used.";
     else if (reason !== "no-key") plan.notice += " The AI provider was unavailable, so the rules-based engine was used.";
   }
-  cache.set(key, { plan, at: Date.now() });
+  if (plan.mode === "ai" || !process.env.GEMINI_API_KEY) cache.set(key, { plan, at: Date.now() });
   if (cache.size > 500) cache.clear();
   return NextResponse.json(plan);
 }
