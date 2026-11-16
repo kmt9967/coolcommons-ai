@@ -1,0 +1,9 @@
+[
+ "Karachi's summers are getting harder to live through. Humid sea air makes the heat people feel far worse than the thermometer suggests. CoolCommons AI helps city teams, NGOs and community planners turn climate data into practical cooling plans.",
+ "It starts with real evidence: ERA5 reanalysis for Karachi, from April to June 2025. At midday on the sixteenth of June, the apparent temperature reached forty-three point seven degrees. Days in the danger band jumped to forty-one in 2024, and thirty-nine in 2025. The live forecast is kept separate from this history.",
+ "Next, the community map. Nearly two thousand OpenStreetMap facilities, like libraries, community centres, parks and clinics, appear as potential sites for assessment, not as verified cooling centres.",
+ "In the simulator, a planner can test hypothetical water points, shaded rest areas and cooling spaces. An optimisation algorithm suggests where new sites would reach the most unserved area, and the comparison shows the change in access, without inventing temperature or health outcomes.",
+ "The exposure assessment combines a real hot day with local assumptions, such as hours outdoors, physical activity and shade. Every point in the score is labelled as data, an assumption, or a scenario.",
+ "Then the AI planner. Google Gemini receives only this structured context, and returns a practical plan: low-cost interventions, accessibility, resources, priorities, and the assumptions behind them.",
+ "CoolCommons AI is an early prototype, and its limits are stated openly. The next step is testing it with Karachi organisations before the next hot season. CoolCommons AI: turning climate data into cooler, safer communities."
+]
