@@ -70,7 +70,7 @@ export function buildPrompt(req: PlanRequest): { system: string; user: string } 
     "Rules: do not invent statistics, temperatures, populations, costs in currency, health outcomes or named partner organisations.",
     "Do not give medical diagnoses. Clearly mark assumptions. Refer to locations only as 'candidate sites for assessment'.",
     "Recommend checking WHO/NDMA/PDMA heat-health guidance and consulting local residents.",
-    `Return ONLY valid JSON: {"summary": string, "sections": [{"title": string, "items": string[]}]} with exactly these section titles in order: ${SECTION_TITLES.join(" | ")}. 3-5 concise items per section.`,
+    `Return ONLY valid JSON: {"summary": string, "sections": [{"title": string, "items": string[]}]} with exactly these section titles in order: ${SECTION_TITLES.join(" | ")}. 3-4 concise items per section, each under 35 words.`,
   ].join("\n");
   const ctx: string[] = [
     `Setting: ${SETTING_LABEL[req.setting]}.`,

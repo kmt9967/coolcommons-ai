@@ -37,7 +37,7 @@ Next.js 15 (App Router, TypeScript, Tailwind CSS v4)
 ├─ src/app/page.tsx              → client App (sections, shared scenario state)
 ├─ src/app/api/forecast          → server route: Open-Meteo forecast, retries, 30-min revalidation, honest failure state
 ├─ src/app/api/plan              → server route: zod validation, rate limit, size limit, cache,
-│                                   25 s timeout, Gemini 2.5 Flash (free tier, JSON mode) → schema check → rules-engine fallback
+│                                   45 s timeout, Gemini 2.5 Flash (free tier, JSON mode) → schema check → rules-engine fallback
 ├─ src/lib/heat.ts               → heat bands, Heat Exposure Index, haversine, sample grid, coverage, greedy placement
 ├─ src/lib/planner.ts            → request schema, grounded prompt builder, JSON parser, rules engine
 ├─ src/data/*.json               → cached Open-Meteo reanalysis (Apr–Jun 2025 hourly/daily; 2016–2025 daily climatology)
@@ -71,7 +71,7 @@ Reproduce data: `bash scripts/fetch_osm.sh` and `python scripts/process_climate.
 
 - Provider: **Google Gemini API (free tier)**, default model `gemini-2.5-flash` (fallback alias `gemini-flash-latest`), key from Google AI Studio stored only as the server-side Vercel environment variable `GEMINI_API_KEY`. No billing is enabled and no paid API is used.
 - The model receives only the structured context (climate values + source, assessment inputs, simulation results) and the user's question, with instructions not to invent statistics, health outcomes, costs or partners.
-- Safeguards: zod input validation, 6 requests/min per IP, 6 KB request cap, 25 s timeout, 2,048 output tokens, JSON-mode output validated against a schema, 30-minute response cache, and graceful handling of free-tier quota exhaustion (HTTP 429).
+- Safeguards: zod input validation, 6 requests/min per IP, 6 KB request cap, 45 s timeout, 1,600 output tokens, JSON-mode output validated against a schema, 30-minute response cache, and graceful handling of free-tier quota exhaustion (HTTP 429).
 - If no key is set, the provider fails, or quota is exhausted, a deterministic **rules-based engine** produces the plan. It is labelled *Rules-based output · no AI model called* and is never presented as AI.
 
 ## Limitations

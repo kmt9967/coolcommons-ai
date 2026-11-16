@@ -3,6 +3,7 @@ import { buildPrompt, parsePlanJson, Plan, PlanRequestSchema, rulesPlan } from "
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
+export const maxDuration = 60;
 
 // Simple per-instance safeguards against uncontrolled usage.
 const RATE_WINDOW_MS = 60_000;
@@ -28,7 +29,7 @@ async function callGemini(system: string, user: string): Promise<{ text: string;
   const attempts = models.flatMap((m) => [{ model: m, thinkingOff: true }, { model: m, thinkingOff: false }]);
   for (const { model, thinkingOff } of attempts) {
     const ctrl = new AbortController();
-    const timer = setTimeout(() => ctrl.abort(), 25_000);
+    const timer = setTimeout(() => ctrl.abort(), 45_000);
     try {
       const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent`, {
         method: "POST",
@@ -36,7 +37,7 @@ async function callGemini(system: string, user: string): Promise<{ text: string;
         body: JSON.stringify({
           systemInstruction: { parts: [{ text: system }] },
           contents: [{ role: "user", parts: [{ text: user }] }],
-          generationConfig: { temperature: 0.3, maxOutputTokens: 2048, responseMimeType: "application/json", ...(thinkingOff ? { thinkingConfig: { thinkingBudget: 0 } } : {}) },
+          generationConfig: { temperature: 0.3, maxOutputTokens: 1600, responseMimeType: "application/json", ...(thinkingOff ? { thinkingConfig: { thinkingBudget: 0 } } : {}) },
         }),
         signal: ctrl.signal,
       });
