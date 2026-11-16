@@ -16,7 +16,7 @@ LINKS
 Live demo: https://coolcommons-ai.vercel.app
 Pitch deck (PPTX): https://coolcommons-ai.vercel.app/submission/CoolCommons-AI-pitch.pptx
 Pitch deck (PDF backup): https://coolcommons-ai.vercel.app/submission/CoolCommons-AI-pitch.pdf
-Recorded demo (1 min 38 s): https://coolcommons-ai.vercel.app/submission/CoolCommons-AI-demo.mp4
+Recorded demo (1 min 42 s): https://coolcommons-ai.vercel.app/submission/CoolCommons-AI-demo.mp4
 Source code (MIT): https://github.com/kmt9967/coolcommons-ai
 README (architecture, data, model, limitations): https://github.com/kmt9967/coolcommons-ai#readme
 Submission notes: https://github.com/kmt9967/coolcommons-ai/blob/main/docs/SUBMISSION.md
