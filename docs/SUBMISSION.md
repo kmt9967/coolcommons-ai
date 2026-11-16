@@ -13,7 +13,9 @@
 | Source code (MIT) | https://github.com/kmt9967/coolcommons-ai |
 | Pitch deck (.pptx) | https://coolcommons-ai.vercel.app/submission/CoolCommons-AI-pitch.pptx |
 | Pitch deck PDF backup | https://coolcommons-ai.vercel.app/submission/CoolCommons-AI-pitch.pdf |
-| Recorded demo (.mp4) | https://coolcommons-ai.vercel.app/submission/CoolCommons-AI-demo.mp4 |
+| Recorded demo (YouTube, narrated) | https://youtu.be/OB9Pbl7mrDc |
+| Recorded demo (.mp4, narrated, subtitled) | https://coolcommons-ai.vercel.app/submission/CoolCommons-AI-demo.mp4 |
+| Subtitles (.srt) | https://coolcommons-ai.vercel.app/submission/CoolCommons-AI-demo.en.srt |
 | README (architecture, data, model, limitations) | https://github.com/kmt9967/coolcommons-ai#readme |
 
 ## Team members and roles
@@ -42,6 +44,7 @@ Open https://coolcommons-ai.vercel.app (no login). 1) Climate Intelligence: clic
 
 - Pre-existing: team's general experience with web apps and server-side LLM integration (earlier project KhidmatConnect AI). **No code was reused.**
 - Third-party: Next.js, React, Tailwind CSS, Recharts, Leaflet/react-leaflet, zod, Vitest, pptxgenjs, Playwright; data from Open-Meteo/ECMWF ERA5, OpenStreetMap, Esri basemap.
+- Demo narration uses a synthetic voice (Microsoft Andrew Neural via the free Edge Read Aloud service, `edge-tts`); no music.
 - AI-generated content: application code, documentation, slides and the demo recording script were produced with substantial assistance from an AI coding assistant (Claude Code), directed and reviewed by the team. The planner's plans are generated at runtime by Gemini (or the rules engine).
 - **Timing disclosure:** the CoolCommons AI code, data processing, deployment and materials were created on 16 November 2026 (see git history), i.e. after the official 14–15 November core-development window, during the morning designated for recording, documentation and submission.
 

@@ -6,6 +6,8 @@ Team **Teqprotech** (Team ID E10) · **ATOX AI for Climate · Youth Climate Hack
 
 - **Live app:** https://coolcommons-ai.vercel.app
 - **Source:** https://github.com/kmt9967/coolcommons-ai
+- **Demo video:** https://youtu.be/OB9Pbl7mrDc (narrated, 2 min 10 s) · [MP4](https://coolcommons-ai.vercel.app/submission/CoolCommons-AI-demo.mp4)
+- **Pitch deck:** [PPTX](https://coolcommons-ai.vercel.app/submission/CoolCommons-AI-pitch.pptx) · [PDF](https://coolcommons-ai.vercel.app/submission/CoolCommons-AI-pitch.pdf)
 
 ---
 
