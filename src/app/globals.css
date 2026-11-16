@@ -1,26 +1,37 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
+  --color-ink: #06101d;
+  --color-panel: #0c1a2c;
+  --color-panel2: #10233a;
+  --color-line: #1d3552;
+  --color-teal: #2dd4bf;
+  --color-cyan: #22d3ee;
+  --color-amber: #f59e0b;
+  --color-rose: #f43f5e;
+  --color-muted: #8ba3bf;
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
-}
-
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
-}
+html { scroll-behavior: smooth; scroll-padding-top: 72px; }
+body { background: #06101d; color: #e6eef7; font-family: var(--font-geist-sans), system-ui, sans-serif; }
+.card { background: linear-gradient(180deg, #0c1a2c 0%, #0a1726 100%); border: 1px solid #1d3552; border-radius: 1rem; }
+.chip { display: inline-flex; align-items: center; gap: .35rem; border-radius: 999px; padding: .15rem .6rem; font-size: .72rem; font-weight: 600; letter-spacing: .02em; }
+.chip-data { background: rgba(45,212,191,.12); color: #5eead4; border: 1px solid rgba(45,212,191,.35); }
+.chip-assumption { background: rgba(245,158,11,.12); color: #fbbf24; border: 1px solid rgba(245,158,11,.35); }
+.chip-scenario { background: rgba(167,139,250,.12); color: #c4b5fd; border: 1px solid rgba(167,139,250,.35); }
+.chip-forecast { background: rgba(34,211,238,.12); color: #67e8f9; border: 1px solid rgba(34,211,238,.35); }
+.btn { border-radius: .6rem; padding: .5rem .9rem; font-weight: 600; font-size: .875rem; transition: all .15s; }
+.btn-primary { background: #2dd4bf; color: #04201c; }
+.btn-primary:hover { background: #5eead4; }
+.btn-ghost { border: 1px solid #1d3552; color: #cfe0f2; }
+.btn-ghost:hover { border-color: #2dd4bf; color: #fff; }
+input[type=range] { accent-color: #2dd4bf; }
+select, textarea, input[type=number] { background: #081423; border: 1px solid #1d3552; border-radius: .5rem; color: #e6eef7; padding: .45rem .6rem; }
+.leaflet-container { background: #0a1522; font-family: inherit; }
+.leaflet-popup-content-wrapper, .leaflet-popup-tip { background: #0c1a2c; color: #e6eef7; border: 1px solid #1d3552; }
+.leaflet-control-attribution { background: rgba(6,16,29,.8) !important; color: #8ba3bf !important; }
+.leaflet-control-attribution a { color: #5eead4 !important; }
+.fade-in { animation: fade .5s ease both; }
+@keyframes fade { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }

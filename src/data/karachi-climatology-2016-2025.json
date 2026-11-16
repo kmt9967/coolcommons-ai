@@ -1,0 +1,147 @@
+{
+ "meta": {
+  "source": "Open-Meteo Historical Weather API (reanalysis: ERA5 / ERA5-Land, ECMWF Copernicus)",
+  "sourceUrl": "https://open-meteo.com/en/docs/historical-weather-api",
+  "license": "CC BY 4.0 (Open-Meteo); contains modified Copernicus Climate Change Service information",
+  "requested": {
+   "latitude": 24.8607,
+   "longitude": 67.0011
+  },
+  "gridCell": {
+   "latitude": 24.850615,
+   "longitude": 66.992485,
+   "elevation": 7.0
+  },
+  "timezone": "Asia/Karachi",
+  "dataType": "reanalysis (modelled, not station observations)",
+  "resolutionNote": "~9-25 km grid cell; city-scale, not neighbourhood-scale",
+  "period": "2016-01-01 to 2025-12-31"
+ },
+ "monthly": [
+  {
+   "month": "Jan",
+   "tmax": 24.0,
+   "atmax": 22.3,
+   "rh": 57.4
+  },
+  {
+   "month": "Feb",
+   "tmax": 27.0,
+   "atmax": 26.1,
+   "rh": 59.3
+  },
+  {
+   "month": "Mar",
+   "tmax": 29.9,
+   "atmax": 30.2,
+   "rh": 64.0
+  },
+  {
+   "month": "Apr",
+   "tmax": 32.3,
+   "atmax": 34.2,
+   "rh": 70.1
+  },
+  {
+   "month": "May",
+   "tmax": 33.5,
+   "atmax": 36.6,
+   "rh": 73.7
+  },
+  {
+   "month": "Jun",
+   "tmax": 32.9,
+   "atmax": 36.9,
+   "rh": 75.9
+  },
+  {
+   "month": "Jul",
+   "tmax": 32.0,
+   "atmax": 35.9,
+   "rh": 77.7
+  },
+  {
+   "month": "Aug",
+   "tmax": 30.3,
+   "atmax": 34.1,
+   "rh": 81.9
+  },
+  {
+   "month": "Sep",
+   "tmax": 31.1,
+   "atmax": 34.6,
+   "rh": 78.5
+  },
+  {
+   "month": "Oct",
+   "tmax": 32.7,
+   "atmax": 34.6,
+   "rh": 68.6
+  },
+  {
+   "month": "Nov",
+   "tmax": 30.1,
+   "atmax": 29.9,
+   "rh": 57.7
+  },
+  {
+   "month": "Dec",
+   "tmax": 26.4,
+   "atmax": 24.4,
+   "rh": 50.4
+  }
+ ],
+ "annualHotDays": [
+  {
+   "year": 2016,
+   "daysAtOrAbove": 10,
+   "daysCounted": 366
+  },
+  {
+   "year": 2017,
+   "daysAtOrAbove": 4,
+   "daysCounted": 365
+  },
+  {
+   "year": 2018,
+   "daysAtOrAbove": 4,
+   "daysCounted": 365
+  },
+  {
+   "year": 2019,
+   "daysAtOrAbove": 9,
+   "daysCounted": 365
+  },
+  {
+   "year": 2020,
+   "daysAtOrAbove": 13,
+   "daysCounted": 366
+  },
+  {
+   "year": 2021,
+   "daysAtOrAbove": 16,
+   "daysCounted": 365
+  },
+  {
+   "year": 2022,
+   "daysAtOrAbove": 9,
+   "daysCounted": 365
+  },
+  {
+   "year": 2023,
+   "daysAtOrAbove": 8,
+   "daysCounted": 365
+  },
+  {
+   "year": 2024,
+   "daysAtOrAbove": 41,
+   "daysCounted": 366
+  },
+  {
+   "year": 2025,
+   "daysAtOrAbove": 39,
+   "daysCounted": 365
+  }
+ ],
+ "thresholdC": 39
+}
