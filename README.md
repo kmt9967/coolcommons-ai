@@ -27,7 +27,7 @@ Municipal climate-resilience teams · NGOs and humanitarian organisations · com
 | **Community map** | 1,950 facilities from OpenStreetMap (hospitals, clinics, libraries, community centres, parks, drinking water) labelled as *potential facilities for assessment* — never as verified cooling centres. |
 | **Intervention simulator** | Place hypothetical drinking-water points, shaded rest areas, community cooling spaces and heat-information stations, or let a **greedy maximal-coverage optimiser** suggest sites. Before/after comparison of a transparent, area-based access proxy with editable radii. |
 | **Heat resilience assessment** | An explainable 0–100 Heat Exposure Index combining real reanalysis data with user assumptions; every component is tagged *Data*, *Assumption* or *Scenario*. |
-| **AI adaptation planner** | Structured plans (evidence, exposure concerns, interventions, accessibility, resources, priorities, assumptions) grounded in the selected climate day, assessment and simulator results. Uses Google Gemini 2.5 Flash (free tier) when configured; otherwise a clearly labelled rules engine. |
+| **AI adaptation planner** | Structured plans (evidence, exposure concerns, interventions, accessibility, resources, priorities, assumptions) grounded in the selected climate day, assessment and simulator results. Uses Google Gemini Flash models (free tier) when configured; otherwise a clearly labelled rules engine. |
 | **Impact & methodology** | Formulas, data sources, limitations and the next validation step. |
 
 ## Architecture
@@ -37,7 +37,7 @@ Next.js 15 (App Router, TypeScript, Tailwind CSS v4)
 ├─ src/app/page.tsx              → client App (sections, shared scenario state)
 ├─ src/app/api/forecast          → server route: Open-Meteo forecast, retries, 30-min revalidation, honest failure state
 ├─ src/app/api/plan              → server route: zod validation, rate limit, size limit, cache,
-│                                   45 s timeout, Gemini 2.5 Flash (free tier, JSON mode) → schema check → rules-engine fallback
+│                                   45 s timeout, Gemini Flash models (free tier, JSON mode) → schema check → rules-engine fallback
 ├─ src/lib/heat.ts               → heat bands, Heat Exposure Index, haversine, sample grid, coverage, greedy placement
 ├─ src/lib/planner.ts            → request schema, grounded prompt builder, JSON parser, rules engine
 ├─ src/data/*.json               → cached Open-Meteo reanalysis (Apr–Jun 2025 hourly/daily; 2016–2025 daily climatology)
@@ -69,7 +69,7 @@ Reproduce data: `bash scripts/fetch_osm.sh` and `python scripts/process_climate.
 
 ## Model usage
 
-- Provider: **Google Gemini API (free tier)**, default model `gemini-2.5-flash` (fallback alias `gemini-flash-latest`), key from Google AI Studio stored only as the server-side Vercel environment variable `GEMINI_API_KEY`. No billing is enabled and no paid API is used.
+- Provider: **Google Gemini API (free tier)**, default model `gemini-2.5-flash`, falling back to `gemini-2.5-flash-lite`, `gemini-flash-latest` and `gemini-flash-lite-latest` on overload (503), per-model quota (429) or timeout, key from Google AI Studio stored only as the server-side Vercel environment variable `GEMINI_API_KEY`. No billing is enabled and no paid API is used.
 - The model receives only the structured context (climate values + source, assessment inputs, simulation results) and the user's question, with instructions not to invent statistics, health outcomes, costs or partners.
 - Safeguards: zod input validation, 6 requests/min per IP, 6 KB request cap, 45 s timeout, 1,600 output tokens, JSON-mode output validated against a schema, 30-minute response cache, and graceful handling of free-tier quota exhaustion (HTTP 429).
 - If no key is set, the provider fails, or quota is exhausted, a deterministic **rules-based engine** produces the plan. It is labelled *Rules-based output · no AI model called* and is never presented as AI.
