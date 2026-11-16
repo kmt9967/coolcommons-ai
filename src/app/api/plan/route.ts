@@ -23,9 +23,10 @@ function rateLimited(ip: string): boolean {
 async function callGemini(system: string, user: string): Promise<{ text: string; model: string }> {
   const key = process.env.GEMINI_API_KEY;
   if (!key) throw new Error("no-key");
-  const models = [process.env.GEMINI_MODEL || "gemini-2.5-flash", "gemini-flash-latest"];
+  const models = [process.env.GEMINI_MODEL || "gemini-2.5-flash", "gemini-flash-latest", "gemini-2.5-flash-lite"];
   let lastErr = "provider-error";
-  for (const model of models) {
+  const attempts = models.flatMap((m) => [{ model: m, thinkingOff: true }, { model: m, thinkingOff: false }]);
+  for (const { model, thinkingOff } of attempts) {
     const ctrl = new AbortController();
     const timer = setTimeout(() => ctrl.abort(), 25_000);
     try {
@@ -35,12 +36,12 @@ async function callGemini(system: string, user: string): Promise<{ text: string;
         body: JSON.stringify({
           systemInstruction: { parts: [{ text: system }] },
           contents: [{ role: "user", parts: [{ text: user }] }],
-          generationConfig: { temperature: 0.3, maxOutputTokens: 2048, responseMimeType: "application/json", thinkingConfig: { thinkingBudget: 0 } },
+          generationConfig: { temperature: 0.3, maxOutputTokens: 2048, responseMimeType: "application/json", ...(thinkingOff ? { thinkingConfig: { thinkingBudget: 0 } } : {}) },
         }),
         signal: ctrl.signal,
       });
       if (res.status === 429) throw new Error("quota");
-      if (res.status === 404) { lastErr = "model-404"; continue; }
+      if (res.status === 404 || res.status === 400) { lastErr = `model-${res.status}`; continue; }
       if (!res.ok) throw new Error(`provider-${res.status}`);
       const json = await res.json();
       const text = (json?.candidates?.[0]?.content?.parts ?? []).map((p: { text?: string }) => p.text ?? "").join("");

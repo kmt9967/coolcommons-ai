@@ -1,0 +1,22 @@
+CoolCommons AI — Turning climate data into cooler, safer communities.
+
+PROBLEM: Karachi's humid coastal air makes heat feel far worse than the thermometer. In ERA5 reanalysis for the city, "feels-like" temperature peaked at 43.7 °C on 16 June 2025 (air 38 °C, 74% humidity), and days at or above 39 °C apparent rose to 41 in 2024 and 39 in 2025, from 4–16 a year in 2016–2023. Municipal resilience teams, NGOs and community planners must decide where scarce water points, shade, cooling spaces and heat information will help most, but climate data rarely arrives in a decision-ready form.
+
+SOLUTION: One web app that goes from evidence to plan. (1) Climate Intelligence: real Open-Meteo/ERA5 data for Apr–Jun 2025, hourly profiles of the hottest days, a 10-year seasonal baseline and a separate live 7-day forecast. (2) Community Map: 1,950 OpenStreetMap facilities, labelled honestly as "potential facilities for assessment", never as verified cooling centres. (3) Intervention Simulator: place hypothetical water points, shaded rest areas, cooling spaces and information stations, or let a greedy maximal-coverage algorithm suggest sites; compare before/after reach with editable radii. (4) Explainable Heat Exposure Index: every point is tagged Data, Assumption or Scenario. (5) AI Adaptation Planner: Google Gemini 2.5 Flash (free tier, server-side) turns the selected climate day, assessment and simulation into a structured plan covering interventions, accessibility, resources, priorities and stated assumptions. If the AI is unavailable, a rules engine takes over and is labelled "no AI model called".
+
+USERS: municipal climate-resilience teams, NGOs and humanitarian organisations, community and public-health planners in Karachi.
+
+DATA & AI: Open-Meteo Historical Weather and Forecast APIs (ERA5 reanalysis, CC BY 4.0); OpenStreetMap via Overpass (ODbL); Esri basemap; NWS heat-index bands as a screening scale. Gemini receives only structured context. Safeguards: input validation, rate limits, timeouts, token caps, JSON-schema checks, caching and quota handling. No sensors or hardware.
+
+LIMITS: reanalysis is city-scale (~9–25 km), not street level; OSM may be incomplete; the access proxy is area-based, not population coverage; the index weights are not validated against health outcomes; no medical, temperature-reduction or lives-saved claims. 12 automated unit tests pass. No field pilot has been run yet. Next step: co-design with a Karachi NGO or municipal team, add population and Landsat land-surface-temperature layers, and field-check candidate sites.
+
+PRIOR WORK & DISCLOSURE: no code reused from earlier team projects. Built with Next.js, Recharts, Leaflet and zod. Code, documentation and media were produced with substantial help from an AI coding assistant (Claude Code), directed and reviewed by the team. Timing: the code and materials were created on 16 November 2026 (see git history), after the 14–15 November core-development window.
+
+LINKS
+Live demo: https://coolcommons-ai.vercel.app
+Pitch deck (PPTX): https://coolcommons-ai.vercel.app/submission/CoolCommons-AI-pitch.pptx
+Pitch deck (PDF backup): https://coolcommons-ai.vercel.app/submission/CoolCommons-AI-pitch.pdf
+Recorded demo (1 min 38 s): https://coolcommons-ai.vercel.app/submission/CoolCommons-AI-demo.mp4
+Source code (MIT): https://github.com/kmt9967/coolcommons-ai
+README (architecture, data, model, limitations): https://github.com/kmt9967/coolcommons-ai#readme
+Submission notes: https://github.com/kmt9967/coolcommons-ai/blob/main/docs/SUBMISSION.md
