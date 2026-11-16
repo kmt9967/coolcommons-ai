@@ -41,8 +41,13 @@ async function callGemini(system: string, user: string): Promise<{ text: string;
         signal: ctrl.signal,
       });
       if (res.status === 429) throw new Error("quota");
-      if (res.status === 404 || res.status === 400) { lastErr = `model-${res.status}`; continue; }
-      if (!res.ok) throw new Error(`provider-${res.status}`);
+      if (!res.ok) {
+        const detail = (await res.text()).slice(0, 300).replace(/AIza[0-9A-Za-z_-]+/g, "[redacted]");
+        console.error(`gemini ${model} thinkingOff=${thinkingOff} status=${res.status}: ${detail}`);
+        lastErr = `${model}:${res.status}`;
+        if (res.status === 404 || res.status === 400) continue;
+        throw new Error(`provider-${res.status}`);
+      }
       const json = await res.json();
       const text = (json?.candidates?.[0]?.content?.parts ?? []).map((p: { text?: string }) => p.text ?? "").join("");
       return { text, model };
@@ -89,6 +94,7 @@ export async function POST(req: NextRequest) {
   } catch (e) {
     const reason = e instanceof Error ? e.message : "error";
     plan = rulesPlan(parsed.data);
+    plan.fallbackReason = reason;
     if (reason === "quota") plan.notice += " The free-tier AI quota is currently exhausted, so the rules-based engine was used.";
     else if (reason !== "no-key") plan.notice += " The AI provider was unavailable, so the rules-based engine was used.";
   }

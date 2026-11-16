@@ -41,6 +41,7 @@ export type Plan = {
   sections: PlanSection[];
   generatedAt: string;
   notice: string;
+  fallbackReason?: string;
 };
 
 export const SECTION_TITLES = [
