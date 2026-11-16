@@ -134,7 +134,7 @@ export default function App() {
               <p><b>Heat bands.</b> Screening thresholds of 27/32/39/51 °C adapted from US NWS heat-index categories, applied to apparent temperature as an indicative scale.</p>
               <p><b>Heat Exposure Index (0–100).</b> Apparent temperature up to 45 pts (linear 27→51 °C); humidity up to 5 (50→90%); exposure 2.5 pts/hour up to 8 h; activity 0/5/10; shade 0/5/10; no water within 250 m 5; distance to cooling space up to 5 (200→1,200 m).</p>
               <p><b>Access proxy.</b> Sample points every 100 m within a 1.5 km study circle; coverage = share within the editable straight-line radius of at least one site. Suggestions use greedy maximal-coverage location allocation.</p>
-              <p><b>AI.</b> Server-side Qwen (Alibaba Cloud Model Studio, OpenAI-compatible API) when a key is configured; input validation, rate limits, 25 s timeout, 1,400-token cap, JSON-schema validation and caching. Otherwise a deterministic rules engine.</p>
+              <p><b>AI.</b> Server-side Google Gemini 2.5 Flash (Gemini API free tier) when a key is configured; input validation, rate limits, 25 s timeout, 2,048-token cap, JSON-schema validation and caching. Otherwise a deterministic rules engine.</p>
             </div>
             <div className="card p-5 text-sm space-y-2 border-amber/40">
               <h3 className="font-semibold text-base text-amber-300">Limitations & future validation</h3>

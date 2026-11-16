@@ -6,6 +6,7 @@ const geistSans = Geist({ variable: "--font-geist-sans", subsets: ["latin"] });
 const geistMono = Geist_Mono({ variable: "--font-geist-mono", subsets: ["latin"] });
 
 export const metadata: Metadata = {
+  metadataBase: new URL("https://coolcommons-ai.vercel.app"),
   title: "CoolCommons AI — Urban Heat Resilience Planner for Karachi",
   description:
     "Turning climate data into cooler, safer communities. Explainable heat-exposure analysis, community facility mapping, intervention simulation and AI-assisted adaptation planning for Karachi.",

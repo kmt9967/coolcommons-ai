@@ -20,35 +20,36 @@ function rateLimited(ip: string): boolean {
   return arr.length > RATE_MAX;
 }
 
-async function callQwen(system: string, user: string): Promise<{ text: string; model: string }> {
-  const key = process.env.DASHSCOPE_API_KEY;
+async function callGemini(system: string, user: string): Promise<{ text: string; model: string }> {
+  const key = process.env.GEMINI_API_KEY;
   if (!key) throw new Error("no-key");
-  const base = process.env.DASHSCOPE_BASE_URL || "https://dashscope-intl.aliyuncs.com/compatible-mode/v1";
-  const model = process.env.QWEN_MODEL || "qwen-plus";
-  const ctrl = new AbortController();
-  const timer = setTimeout(() => ctrl.abort(), 25_000);
-  try {
-    const res = await fetch(`${base}/chat/completions`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json", Authorization: `Bearer ${key}` },
-      body: JSON.stringify({
-        model,
-        temperature: 0.3,
-        max_tokens: 1400,
-        response_format: { type: "json_object" },
-        messages: [
-          { role: "system", content: system },
-          { role: "user", content: user },
-        ],
-      }),
-      signal: ctrl.signal,
-    });
-    if (!res.ok) throw new Error(`provider-${res.status}`);
-    const json = await res.json();
-    return { text: json?.choices?.[0]?.message?.content ?? "", model };
-  } finally {
-    clearTimeout(timer);
+  const models = [process.env.GEMINI_MODEL || "gemini-2.5-flash", "gemini-flash-latest"];
+  let lastErr = "provider-error";
+  for (const model of models) {
+    const ctrl = new AbortController();
+    const timer = setTimeout(() => ctrl.abort(), 25_000);
+    try {
+      const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json", "x-goog-api-key": key },
+        body: JSON.stringify({
+          systemInstruction: { parts: [{ text: system }] },
+          contents: [{ role: "user", parts: [{ text: user }] }],
+          generationConfig: { temperature: 0.3, maxOutputTokens: 2048, responseMimeType: "application/json", thinkingConfig: { thinkingBudget: 0 } },
+        }),
+        signal: ctrl.signal,
+      });
+      if (res.status === 429) throw new Error("quota");
+      if (res.status === 404) { lastErr = "model-404"; continue; }
+      if (!res.ok) throw new Error(`provider-${res.status}`);
+      const json = await res.json();
+      const text = (json?.candidates?.[0]?.content?.parts ?? []).map((p: { text?: string }) => p.text ?? "").join("");
+      return { text, model };
+    } finally {
+      clearTimeout(timer);
+    }
   }
+  throw new Error(lastErr);
 }
 
 export async function POST(req: NextRequest) {
@@ -73,7 +74,7 @@ export async function POST(req: NextRequest) {
   const { system, user } = buildPrompt(parsed.data);
   let plan: Plan;
   try {
-    const { text, model } = await callQwen(system, user);
+    const { text, model } = await callGemini(system, user);
     const out = parsePlanJson(text);
     if (!out) throw new Error("unparseable");
     plan = {
@@ -82,12 +83,13 @@ export async function POST(req: NextRequest) {
       summary: out.summary,
       sections: out.sections,
       generatedAt: new Date().toISOString(),
-      notice: `Generated live by ${model} (Alibaba Cloud Model Studio) from the climate data and scenario shown. Review before use.`,
+      notice: `Generated live by Google ${model} (Gemini API, free tier) from the climate data and scenario shown. Review before use.`,
     };
   } catch (e) {
     const reason = e instanceof Error ? e.message : "error";
     plan = rulesPlan(parsed.data);
-    if (reason !== "no-key") plan.notice += " The AI provider was unavailable, so the rules-based engine was used.";
+    if (reason === "quota") plan.notice += " The free-tier AI quota is currently exhausted, so the rules-based engine was used.";
+    else if (reason !== "no-key") plan.notice += " The AI provider was unavailable, so the rules-based engine was used.";
   }
   cache.set(key, { plan, at: Date.now() });
   if (cache.size > 500) cache.clear();
@@ -95,5 +97,5 @@ export async function POST(req: NextRequest) {
 }
 
 export async function GET() {
-  return NextResponse.json({ aiConfigured: Boolean(process.env.DASHSCOPE_API_KEY) });
+  return NextResponse.json({ aiConfigured: Boolean(process.env.GEMINI_API_KEY) });
 }

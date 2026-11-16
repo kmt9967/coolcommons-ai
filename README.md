@@ -27,7 +27,7 @@ Municipal climate-resilience teams · NGOs and humanitarian organisations · com
 | **Community map** | 1,950 facilities from OpenStreetMap (hospitals, clinics, libraries, community centres, parks, drinking water) labelled as *potential facilities for assessment* — never as verified cooling centres. |
 | **Intervention simulator** | Place hypothetical drinking-water points, shaded rest areas, community cooling spaces and heat-information stations, or let a **greedy maximal-coverage optimiser** suggest sites. Before/after comparison of a transparent, area-based access proxy with editable radii. |
 | **Heat resilience assessment** | An explainable 0–100 Heat Exposure Index combining real reanalysis data with user assumptions; every component is tagged *Data*, *Assumption* or *Scenario*. |
-| **AI adaptation planner** | Structured plans (evidence, exposure concerns, interventions, accessibility, resources, priorities, assumptions) grounded in the selected climate day, assessment and simulator results. Uses Qwen via Alibaba Cloud Model Studio when configured; otherwise a clearly labelled rules engine. |
+| **AI adaptation planner** | Structured plans (evidence, exposure concerns, interventions, accessibility, resources, priorities, assumptions) grounded in the selected climate day, assessment and simulator results. Uses Google Gemini 2.5 Flash (free tier) when configured; otherwise a clearly labelled rules engine. |
 | **Impact & methodology** | Formulas, data sources, limitations and the next validation step. |
 
 ## Architecture
@@ -37,7 +37,7 @@ Next.js 15 (App Router, TypeScript, Tailwind CSS v4)
 ├─ src/app/page.tsx              → client App (sections, shared scenario state)
 ├─ src/app/api/forecast          → server route: Open-Meteo forecast, retries, 30-min revalidation, honest failure state
 ├─ src/app/api/plan              → server route: zod validation, rate limit, size limit, cache,
-│                                   25 s timeout, 1,400-token cap, Qwen (OpenAI-compatible) → JSON-schema check → fallback rules engine
+│                                   25 s timeout, Gemini 2.5 Flash (free tier, JSON mode) → schema check → rules-engine fallback
 ├─ src/lib/heat.ts               → heat bands, Heat Exposure Index, haversine, sample grid, coverage, greedy placement
 ├─ src/lib/planner.ts            → request schema, grounded prompt builder, JSON parser, rules engine
 ├─ src/data/*.json               → cached Open-Meteo reanalysis (Apr–Jun 2025 hourly/daily; 2016–2025 daily climatology)
@@ -69,10 +69,10 @@ Reproduce data: `bash scripts/fetch_osm.sh` and `python scripts/process_climate.
 
 ## Model usage
 
-- Provider: Alibaba Cloud Model Studio (DashScope, OpenAI-compatible endpoint), default model `qwen-plus`, configured with server-side environment variables only.
+- Provider: **Google Gemini API (free tier)**, default model `gemini-2.5-flash` (fallback alias `gemini-flash-latest`), key from Google AI Studio stored only as the server-side Vercel environment variable `GEMINI_API_KEY`. No billing is enabled and no paid API is used.
 - The model receives only the structured context (climate values + source, assessment inputs, simulation results) and the user's question, with instructions not to invent statistics, health outcomes, costs or partners.
-- Output must parse into the required JSON schema, otherwise the rules engine is used. Output is labelled *AI-generated* or *Rules-based* in the UI.
-- **Deployment status:** the public deployment currently runs **without** an AI key (none was available to the team at build time), so the planner shows the clearly-labelled rules-based engine. Adding `DASHSCOPE_API_KEY` in Vercel enables live Qwen output without code changes.
+- Safeguards: zod input validation, 6 requests/min per IP, 6 KB request cap, 25 s timeout, 2,048 output tokens, JSON-mode output validated against a schema, 30-minute response cache, and graceful handling of free-tier quota exhaustion (HTTP 429).
+- If no key is set, the provider fails, or quota is exhausted, a deterministic **rules-based engine** produces the plan. It is labelled *Rules-based output · no AI model called* and is never presented as AI.
 
 ## Limitations
 
@@ -88,7 +88,7 @@ Reproduce data: `bash scripts/fetch_osm.sh` and `python scripts/process_climate.
 
 ```bash
 npm install
-cp .env.example .env.local   # optional: add DASHSCOPE_API_KEY
+cp .env.example .env.local   # optional: add GEMINI_API_KEY
 npm run dev                  # http://localhost:3000
 npm test                     # unit tests (Vitest)
 npm run build
@@ -96,12 +96,12 @@ npm run build
 
 ### Deployment
 
-Import the GitHub repo into Vercel (framework preset: Next.js). Optional env vars: `DASHSCOPE_API_KEY`, `DASHSCOPE_BASE_URL`, `QWEN_MODEL`. Never commit `.env.local`.
+Import the GitHub repo into Vercel (framework preset: Next.js). Optional env vars: `GEMINI_API_KEY`, `GEMINI_MODEL`. Never commit `.env.local`.
 
 ## Prior work & disclosure
 
 - Bootstrapped with `create-next-app`; uses open-source libraries (Next.js, React, Tailwind CSS, Recharts, Leaflet, react-leaflet, zod, Vitest).
-- No code was reused from the team's earlier projects (e.g. KhidmatConnect AI); only the idea of a server-side Qwen integration pattern was carried over.
+- No code was reused from the team's earlier projects (e.g. KhidmatConnect AI); only the general idea of a server-side LLM integration pattern was carried over.
 - Code, data processing, documentation and media were produced with substantial assistance from an AI coding assistant (Claude Code), directed and reviewed by the team.
 - Timing: the application code in this repository was written on **16 November 2026** (see git history), after the official core-development window (14–15 Nov) had closed.
 

@@ -41,7 +41,7 @@ export default function Planner({ context }: { context: Omit<PlanRequest, "quest
       <div className="lg:col-span-2 card p-4 md:p-5 space-y-3">
         <div className="flex items-center justify-between">
           <h3 className="font-semibold">Ask the planner</h3>
-          {aiConfigured === null ? null : aiConfigured ? <span className="chip chip-data">Live AI: Qwen (server-side)</span> : <span className="chip chip-assumption">Rules engine (no AI key set)</span>}
+          {aiConfigured === null ? null : aiConfigured ? <span className="chip chip-data">Live AI: Google Gemini (server-side)</span> : <span className="chip chip-assumption">Rules engine (no AI key set)</span>}
         </div>
         <label className="text-xs text-muted" htmlFor="setting">Setting</label>
         <select id="setting" className="w-full text-sm" value={setting} onChange={(e) => setSetting(e.target.value as PlanRequest["setting"])}>
